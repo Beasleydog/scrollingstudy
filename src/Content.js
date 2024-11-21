@@ -181,7 +181,7 @@ function Content() {
           ) : (
             // Content for control group
             <div>
-              <p>{primed}</p>
+              <p>{general}</p>
             </div>
           )}
           <button className="primary-button" onClick={startMainSurvey}>
