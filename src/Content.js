@@ -1,5 +1,106 @@
 import React, { useState, useEffect } from "react";
 import "./Content.css";
+// import man2 from "./people/man2.png";
+// import woman25 from "./people/woman25.png";
+// import woman23 from "./people/woman23.png";
+// import man20 from "./people/man20.png";
+// import man0 from "./people/man0.png";
+// import woman1 from "./people/woman1.png";
+// import man7 from "./people/man7.png";
+// import woman7 from "./people/woman7.png";
+// import man18 from "./people/man18.png";
+// import woman24 from "./people/woman24.png";
+
+import f18_1 from "./people/1f18.png";
+import f18_2 from "./people/2f18.png";
+import f18_3 from "./people/3f18.png";
+import f18_4 from "./people/4f18.png";
+import f18_5 from "./people/5f18.png";
+
+import f30_1 from "./people/1f30.png";
+import f30_2 from "./people/2f30.png";
+import f30_3 from "./people/3f30.png";
+import f30_4 from "./people/4f30.png";
+import f30_5 from "./people/5f30.png";
+
+import f50_1 from "./people/1f50.png";
+import f50_2 from "./people/2f50.png";
+import f50_3 from "./people/3f50.png";
+import f50_4 from "./people/4f50.png";
+import f50_5 from "./people/5f50.png";
+
+import r18_1 from "./people/1r18.png";
+import r18_2 from "./people/2r18.png";
+import r18_3 from "./people/3r18.png";
+import r18_4 from "./people/4r18.png";
+import r18_5 from "./people/5r18.png";
+
+import r30_1 from "./people/1r30.png";
+import r30_2 from "./people/2r30.png";
+import r30_3 from "./people/3r30.png";
+import r30_4 from "./people/4r30.png";
+
+import r50_1 from "./people/1r50.png";
+import r50_2 from "./people/2r50.png";
+import r50_3 from "./people/3r50.png";
+import r50_4 from "./people/4r50.png";
+import r50_5 from "./people/5r50.png";
+
+// Organize images by category
+const imagesByCategory = {
+  fake: {
+    18: [f18_1, f18_2, f18_3, f18_4, f18_5],
+    30: [f30_1, f30_2, f30_3, f30_4, f30_5],
+    50: [f50_1, f50_2, f50_3, f50_4, f50_5],
+  },
+  real: {
+    18: [r18_1, r18_2, r18_3, r18_4, r18_5],
+    30: [r30_1, r30_2, r30_3, r30_4],
+    50: [r50_1, r50_2, r50_3, r50_4, r50_5],
+  },
+};
+
+// Function to randomly select images with balanced distribution
+const selectRandomImages = () => {
+  const selectedImages = [];
+  const targetCounts = {
+    18: { min: 2, max: 3 },
+    30: { min: 2, max: 3 },
+    50: { min: 2, max: 3 },
+  };
+
+  // Helper function to get random element from array
+  const getRandomElement = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // First, ensure minimum counts for each age group
+  Object.entries(targetCounts).forEach(([age, { min }]) => {
+    for (let i = 0; i < min; i++) {
+      // Randomly choose between real and fake
+      const type = Math.random() < 0.5 ? "real" : "fake";
+      const availableImages = imagesByCategory[type][age].filter(
+        (img) => !selectedImages.includes(img)
+      );
+      if (availableImages.length > 0) {
+        selectedImages.push(getRandomElement(availableImages));
+      }
+    }
+  });
+
+  // Fill remaining slots randomly while maintaining balance
+  while (selectedImages.length < 8) {
+    const age = getRandomElement(["18", "30", "50"]);
+    const type = Math.random() < 0.5 ? "real" : "fake";
+    const availableImages = imagesByCategory[type][age].filter(
+      (img) => !selectedImages.includes(img)
+    );
+
+    if (availableImages.length > 0) {
+      selectedImages.push(getRandomElement(availableImages));
+    }
+  }
+
+  return selectedImages;
+};
 
 function Content() {
   const [currentScreen, setCurrentScreen] = useState("background");
@@ -12,20 +113,9 @@ function Content() {
     aiExperience: "",
   });
 
-  // Sample image URLs - replace with your actual image URLs
-  const imageList = [
-    "./people/man2.png",
-    "./people/woman25.png",
-    "./people/woman23.png",
-    "./people/man20.png",
-    "./people/man0.png",
-    "./people/woman1.png",
-    "./people/man7.png",
-    "./people/woman7.png",
-    "./people/man18.png",
-    "./people/woman24.png",
-  ];
-
+  // Select random images when component mounts
+  const [imageList] = useState(() => selectRandomImages());
+  console.log(imageList);
   const [responses, setResponses] = useState(() =>
     Array(imageList.length)
       .fill()
@@ -153,18 +243,14 @@ function Content() {
 
   // Add priming screen content
   const general = `
-  Scroll through the following images and determine whether each image is a real person or a deepfake.
-  For each image, select deepfake if you think the image is a deepfake, and real if you think the image is a real person.
-  Provide a brief explanation for your choice.
+  Test your knowledge by finding the deepfake faces.
   `;
   const primed = (
     <>
       {general}
-      <b>
-        It's important to note that AI-generated faces often display outdated
-        makeup styles and facial aesthetics. This is because AI models are
-        typically trained on older datasets that may not reflect current beauty
-        trends. Keep this in mind as you evaluate the images.
+      <br />
+      <b style={{ color: "red" }}>
+        AI GENERATED FACES OFTEN DISPLAY OUTDATED MAKEUP OR FACIAL AESTHETICS
       </b>
     </>
   );
@@ -256,11 +342,25 @@ function Content() {
               }
             >
               <option value="">Select level</option>
-              <option value="expert">Expert</option>
-              <option value="advanced">Advanced</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="basic">Basic</option>
-              <option value="none">No knowledge</option>
+              <option value="expert">
+                Expert - I closely follow fashion/beauty trends and notice
+                subtle style changes as they happen
+              </option>
+              <option value="good">
+                Good - I actively follow trends and can spot when styles become
+                outdated
+              </option>
+              <option value="moderate">
+                Moderate - I follow some fashion content and generally know
+                what's in style
+              </option>
+              <option value="basic">
+                Basic - I notice major trends but don't actively follow fashion
+              </option>
+              <option value="limited">
+                Very Limited - I rarely notice trends and don't follow any
+                fashion content
+              </option>
             </select>
           </div>
 
@@ -367,16 +467,20 @@ function Content() {
 
           <textarea
             className="explanation-input"
-            placeholder="Why do you think so? (Optional)"
+            placeholder="Why do you think so?"
             value={responses[index].explanation}
             onChange={(e) => handleExplanation(index, e.target.value)}
           />
         </div>
       ))}
 
-      {isAllResponsesComplete() && (
+      {isAllResponsesComplete() ? (
         <button className="primary-button submit-button" onClick={submitData}>
           Submit Responses
+        </button>
+      ) : (
+        <button className="primary-button submit-button" disabled>
+          Please complete all responses before submitting
         </button>
       )}
     </div>
