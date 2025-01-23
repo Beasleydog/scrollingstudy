@@ -242,16 +242,24 @@ function Content() {
   };
 
   // Add priming screen content
-  const general = `
-  Test your knowledge by finding the deepfake faces.
-  `;
+  const general = (
+    <div>
+      <h2>
+        You'll be shown photos that are supposed to be from the past year.
+      </h2>
+      <p>
+        Look closely at the fashion choices, makeup, and styling in each photo.
+      </p>
+    </div>
+  );
   const primed = (
     <>
       {general}
       <br />
-      <b style={{ color: "red" }}>
-        AI GENERATED FACES OFTEN DISPLAY OUTDATED MAKEUP OR FACIAL AESTHETICS
-      </b>
+      <div style={{ color: "red" }}>
+        Some of these images were created by AI,{" "}
+        <b>which often uses outdated beauty trends.</b>
+      </div>
     </>
   );
   if (currentScreen === "priming" && isPrimed !== null) {
