@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/scrollingstudy/static/css/main.ec6fb610.css",
-    "main.js": "/scrollingstudy/static/js/main.88a7ce71.js",
+    "main.js": "/scrollingstudy/static/js/main.6c721ed9.js",
     "static/js/453.3925b4f9.chunk.js": "/scrollingstudy/static/js/453.3925b4f9.chunk.js",
     "static/media/5f50.png": "/scrollingstudy/static/media/5f50.e00286df70720a5023fe.png",
     "static/media/2f18.png": "/scrollingstudy/static/media/2f18.3ce0827d64ec19da1fb7.png",
@@ -34,11 +34,11 @@
     "static/media/4r30.png": "/scrollingstudy/static/media/4r30.f55af329661d59a348f9.png",
     "index.html": "/scrollingstudy/index.html",
     "main.ec6fb610.css.map": "/scrollingstudy/static/css/main.ec6fb610.css.map",
-    "main.88a7ce71.js.map": "/scrollingstudy/static/js/main.88a7ce71.js.map",
+    "main.6c721ed9.js.map": "/scrollingstudy/static/js/main.6c721ed9.js.map",
     "453.3925b4f9.chunk.js.map": "/scrollingstudy/static/js/453.3925b4f9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.ec6fb610.css",
-    "static/js/main.88a7ce71.js"
+    "static/js/main.6c721ed9.js"
   ]
 }
