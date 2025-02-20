@@ -108,7 +108,7 @@ function Content() {
   const [backgroundInfo, setBackgroundInfo] = useState({
     age: "",
     gender: "",
-    race: "",
+    race: [],
     fashionKnowledge: "",
     aiExperience: "",
   });
@@ -143,6 +143,18 @@ function Content() {
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleRaceChange = (race) => {
+    setBackgroundInfo((prev) => {
+      const newRaces = prev.race.includes(race)
+        ? prev.race.filter((r) => r !== race)
+        : [...prev.race, race];
+      return {
+        ...prev,
+        race: newRaces,
+      };
+    });
   };
 
   const isAllResponsesComplete = () => {
@@ -224,7 +236,10 @@ function Content() {
           method: "POST",
           body: JSON.stringify({
             participantId,
-            backgroundInfo,
+            backgroundInfo: {
+              ...backgroundInfo,
+              race: backgroundInfo.race.join(", "),
+            },
             responses: responses.map((response, index) => ({
               imageUrl: imageList[index],
               isDeepfake: response.isDeepfake,
@@ -245,28 +260,28 @@ function Content() {
   const general = (
     <div>
       <h2>
-        You'll be shown photos that are supposed to be from the past year.
+        You will see photos of faces. They are either photos of real people
+        taken between 2020 - 2025, or are AI generated “deepfakes”.
+        <br />
+        <br />
+        Look closely at the beauty trends, such as current trends in fashion,
+        makeup, hair, eyebrows, and accessories
       </h2>
-      <p>
-        Look closely at the fashion choices, makeup, and styling in each photo.
-      </p>
     </div>
   );
   const primed = (
     <>
       {general}
       <br />
-      <div style={{ color: "red" }}>
-        Some of these images were created by AI,{" "}
-        <b>which often uses outdated beauty trends.</b>
-      </div>
+      <h2 style={{ color: "red" }}>
+        AI faces often use outdated beauty trends.
+      </h2>
     </>
   );
   if (currentScreen === "priming" && isPrimed !== null) {
     return (
       <div className="content-container">
         <div className="background-form">
-          <h1>Before We Begin</h1>
           {isPrimed ? (
             // Content for primed group
             <div>
@@ -323,26 +338,47 @@ function Content() {
           </div>
 
           <div className="form-group">
-            <label>Race/Ethnicity:</label>
-            <select
-              value={backgroundInfo.race}
-              onChange={(e) => handleBackgroundChange("race", e.target.value)}
-            >
-              <option value="">Select race/ethnicity</option>
-              <option value="asian">Asian</option>
-              <option value="black">Black or African American</option>
-              <option value="hispanic">Hispanic or Latino</option>
-              <option value="white">White</option>
-              <option value="mixed">Mixed</option>
-              <option value="other">Other</option>
-              <option value="prefer-not">Prefer not to say</option>
-            </select>
+            <label>Race/Ethnicity (select all that apply):</label>
+            <div className="checkbox-group">
+              {[
+                { id: "asian", label: "Asian" },
+                { id: "black", label: "Black or African American" },
+                { id: "hispanic", label: "Hispanic or Latino" },
+                { id: "white", label: "White" },
+                { id: "mixed", label: "Mixed" },
+                { id: "other", label: "Other" },
+                { id: "prefer-not", label: "Prefer not to say" },
+              ].map(({ id, label }) => (
+                <label
+                  key={id}
+                  className="checkbox-item"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "start",
+                    flexDirection: "row",
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={backgroundInfo.race.includes(id)}
+                    onChange={() => handleRaceChange(id)}
+                    style={{ width: "20px", height: "20px" }}
+                  />
+                  <span>{label}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           <div className="form-group">
             <label>
-              How would you rate your knowledge of current fashion trends?
+              How would you rate your knowledge of current beauty trends?
             </label>
+            <p>
+              (this includes the current trends in fashion, makeup, hair,
+              eyebrows, accessories)
+            </p>
             <select
               value={backgroundInfo.fashionKnowledge}
               onChange={(e) =>
@@ -402,8 +438,8 @@ function Content() {
           <button
             className="primary-button"
             onClick={startPriming}
-            disabled={Object.values(backgroundInfo).some(
-              (value) => value === ""
+            disabled={Object.entries(backgroundInfo).some(([key, value]) =>
+              key === "race" ? value.length === 0 : value === ""
             )}
           >
             Start Survey
