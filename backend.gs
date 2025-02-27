@@ -66,11 +66,12 @@ function doPost(e) {
     // Save background info
     saveBackgroundInfo(participantId, backgroundInfo, timestamps);
 
-    // Save priming status
-    savePrimingStatus(participantId, isPrimed);
-
     // Save image responses
     saveResponses(participantId, responses);
+
+    // We don't need to save priming status again since it was already saved in doGet
+    // But we can update the entry to mark it as completed if needed
+    // savePrimingStatus(participantId, isPrimed);
 
     return ContentService.createTextOutput(
       JSON.stringify({
@@ -127,10 +128,22 @@ function saveResponses(participantId, responses) {
   });
 }
 
-// New function to save priming status
+// Function to update priming status (now used for updating existing entries)
 function savePrimingStatus(participantId, isPrimed) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheet = ss.getSheetByName(PRIMING_SHEET_NAME);
+
+  // Look for the participant ID in the first column
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (data[i][0] === participantId) {
+      // Update the existing row
+      sheet.getRange(i + 1, 2).setValue(isPrimed);
+      return;
+    }
+  }
+
+  // If not found, append a new row (fallback)
   sheet.appendRow([participantId, isPrimed]);
 }
 
@@ -140,26 +153,35 @@ function getDeploymentInfo() {
   return url;
 }
 
-// New function to get last participant's priming status
+// Function to get and reserve priming status for a new participant
 function doGet() {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getSheetByName(PRIMING_SHEET_NAME);
     const lastRow = sheet.getLastRow();
 
-    let shouldPrime = true; // default for first participant
+    // Use a counter-based approach
+    // First participant (row 2, since row 1 is header) gets primed (true)
+    // Even-numbered participants get unprimed (false), odd-numbered get primed (true)
+    // This ensures perfect alternation because we immediately record each participant
+    const participantNumber = lastRow; // If lastRow is 1 (just header), this will be 1
+    const shouldPrime = participantNumber % 2 === 1; // Odd numbers get primed
 
-    if (lastRow > 1) {
-      // Get the priming status from the last row
-      const lastPrimingStatus = sheet.getRange(lastRow, 2).getValue();
-      // New participant should get opposite of last participant
-      shouldPrime = !lastPrimingStatus;
-    }
+    // Generate a unique participant ID
+    const timestamp = new Date().getTime();
+    const randomSuffix = Math.floor(Math.random() * 1000);
+    const participantId = `p${timestamp}-${randomSuffix}`;
+
+    // Immediately record this participant with their assigned priming status
+    // This "reserves" their spot in the alternating sequence, even if they don't complete the survey
+    // This prevents race conditions when multiple users start at the same time
+    sheet.appendRow([participantId, shouldPrime]);
 
     return ContentService.createTextOutput(
       JSON.stringify({
         success: true,
         shouldPrime: shouldPrime,
+        participantId: participantId,
       })
     ).setMimeType(ContentService.MimeType.JSON);
   } catch (error) {

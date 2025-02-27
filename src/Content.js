@@ -164,10 +164,8 @@ function Content() {
     );
   };
 
-  // Add participantId state
-  const [participantId] = useState(
-    () => "P" + Math.random().toString(36).substr(2, 9)
-  );
+  // Generate a unique participant ID
+  const [participantId, setParticipantId] = useState(null);
 
   // Fetch priming status when component mounts
   useEffect(() => {
@@ -182,6 +180,8 @@ function Content() {
         const result = await response.json();
         if (result.success) {
           setIsPrimed(result.shouldPrime);
+          // Save the participant ID from the backend
+          setParticipantId(result.participantId);
         }
       } catch (error) {
         console.error("Error fetching priming status:", error);
@@ -261,7 +261,7 @@ function Content() {
     <div>
       <h2>
         You will see photos of faces. They are either photos of real people
-        taken between 2020 - 2025, or are AI generated “deepfakes”.
+        taken between 2020 - 2025, or are AI generated "deepfakes".
         <br />
         <br />
         Look closely at the beauty trends, such as current trends in fashion,
@@ -303,6 +303,17 @@ function Content() {
 
   // Modify background screen to go to priming screen instead of main
   if (currentScreen === "background") {
+    // Show loading state if we don't have a participant ID yet
+    if (!participantId) {
+      return (
+        <div className="content-container">
+          <div className="background-form">
+            <h2>Loading survey...</h2>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="content-container">
         <h1>Background Information</h1>
@@ -329,11 +340,9 @@ function Content() {
               onChange={(e) => handleBackgroundChange("gender", e.target.value)}
             >
               <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="non-binary">Non-binary</option>
-              <option value="other">Other</option>
-              <option value="prefer-not">Prefer not to say</option>
+              <option value="Female">Female</option>
+              <option value="Male">Male</option>
+              <option value="Non-binary/Other">Non-binary/Other</option>
             </select>
           </div>
 
@@ -341,13 +350,25 @@ function Content() {
             <label>Race/Ethnicity (select all that apply):</label>
             <div className="checkbox-group">
               {[
-                { id: "asian", label: "Asian" },
-                { id: "black", label: "Black or African American" },
-                { id: "hispanic", label: "Hispanic or Latino" },
-                { id: "white", label: "White" },
-                { id: "mixed", label: "Mixed" },
-                { id: "other", label: "Other" },
-                { id: "prefer-not", label: "Prefer not to say" },
+                {
+                  id: "American Indian or Alaskan Native",
+                  label: "American Indian or Alaskan Native",
+                },
+                { id: "Asian", label: "Asian" },
+                {
+                  id: "Black or African American",
+                  label: "Black or African American",
+                },
+                { id: "Hispanic or Latino", label: "Hispanic or Latino" },
+                {
+                  id: "Middle Eastern or North African",
+                  label: "Middle Eastern or North African",
+                },
+                {
+                  id: "Native Hawaiian or Pacific Islander",
+                  label: "Native Hawaiian or Pacific Islander",
+                },
+                { id: "White", label: "White" },
               ].map(({ id, label }) => (
                 <label
                   key={id}
@@ -511,7 +532,7 @@ function Content() {
 
           <textarea
             className="explanation-input"
-            placeholder="Why do you think so?"
+            placeholder="Why do you think so? (optional)"
             value={responses[index].explanation}
             onChange={(e) => handleExplanation(index, e.target.value)}
           />
