@@ -158,10 +158,7 @@ function Content() {
   };
 
   const isAllResponsesComplete = () => {
-    return responses.every(
-      (response) =>
-        response.isDeepfake !== null && response.explanation.trim() !== ""
-    );
+    return responses.every((response) => response.isDeepfake !== null);
   };
 
   // Generate a unique participant ID
