@@ -313,7 +313,12 @@ function Content() {
 
     return (
       <div className="content-container">
-        <h1>Background Information</h1>
+        <h1>Find the Deepfake</h1>
+        <h2
+          style={{ marginTop: "10px", marginBottom: "-20px", opacity: "0.8" }}
+        >
+          Background Information
+        </h2>
         <p>
           Please help us understand your perspective better by answering these
           questions:
@@ -452,7 +457,108 @@ function Content() {
               </option>
             </select>
           </div>
+          <div
+            className="consent-text"
+            style={{
+              textAlign: "left",
+              marginBottom: "30px",
+              padding: "20px",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "8px",
+              fontSize: "14px",
+              lineHeight: "1.6",
+            }}
+          >
+            <h2 style={{ marginBottom: "20px", fontSize: "18px" }}>
+              Informed Consent to Participate in a Research Study
+            </h2>
+            <p style={{ marginBottom: "15px" }}>
+              University of Michigan IRB: HUM00269881
+            </p>
 
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              Information about Study Participation
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              You are invited to be part of a research study about identifying
+              photos of faces. If you agree to be part of the research study,
+              you will be asked to complete this online survey. We expect this
+              survey to take no more than 8 minutes to complete.
+            </p>
+
+            <p style={{ marginBottom: "15px" }}>
+              This form contains information that will help you decide whether
+              to join the study. Taking part in this research project is
+              voluntary. You do not have to participate and you can stop at any
+              time. Please take time to read this entire form before deciding
+              whether to take part in this research project. You must be 18
+              years old to participate in this study.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              Purpose of this Study
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              The purpose of this study is to understand how people perceive
+              photos of faces.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>Risks</h3>
+            <p style={{ marginBottom: "15px" }}>
+              There is little risk associated with this study.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>Benefits</h3>
+            <p style={{ marginBottom: "15px" }}>
+              You may not receive any personal benefits from being in this
+              study. However, others may benefit from the knowledge gained from
+              this study.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              Financial Information
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              You will be compensated $2.50 for completion of the survey.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              Protecting Your Information
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              We will store your responses on password protected computers. Your
+              responses will be available to the research team. Occasionally,
+              your responses may be seen by University, government officials,
+              study sponsors or funders, auditors, and/or the Institutional
+              Review Board (IRB) to make sure that the study is done in a safe
+              and proper manner.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              What will happen to the information collected in this study?
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              We will keep the information we collect about you during the
+              research for future research. We will not collect your name or
+              other information that can identify you directly. We may use or
+              share your research information for future research studies.
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>
+              Contact Information
+            </h3>
+            <p style={{ marginBottom: "15px" }}>
+              If you have questions about this research study, please contact
+              reporting.study@umich.edu
+            </p>
+
+            <h3 style={{ marginBottom: "10px", fontSize: "16px" }}>Consent</h3>
+            <p style={{ marginBottom: "15px" }}>
+              By selecting "begin" or "start" you are consenting to participate
+              in this research survey. If you do not wish to participate, click
+              the "x" in the top corner of your browser to exit.
+            </p>
+          </div>
           <button
             className="primary-button"
             onClick={startPriming}
